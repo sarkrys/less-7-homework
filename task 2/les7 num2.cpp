@@ -9,7 +9,7 @@ protected:
 public:
     figure(int side1, int side2, int side3, int side4, int angle1, int angle2, int angle3, int angle4)
         : a(side1), b(side2), c(side3), d(side4), A(angle1), B(angle2), C(angle3), D(angle4) {
-        if (a <= 0 || b <= 0 || c <= 0 || d < 0 || A <= 0 || B <= 0 || C <= 0 || D < 0) {
+        if (a <= 0 || b <= 0 || c <= 0 || d < 0 || A <= 0 || B <= 0 || C <= 0 || D < 0 || A==180 || A==360 || B == 180 || B == 360 || C == 180 || C == 360 || D == 180 || D == 360) {
             throw std::invalid_argument("Некорректные параметры для создания фигуры.\n");
         }
     }
@@ -39,8 +39,11 @@ public:
 class triangle : public figure {
 public:
     triangle(int side1, int side2, int side3, int angle1, int angle2, int angle3)
-        : figure(side1, side2, side3, 0, angle1, angle2, angle3, 0) {}
-
+        : figure(side1, side2, side3, 0, angle1, angle2, angle3, 0) {
+        if (side1 <= 0 || side2 <= 0 || side3 <= 0 || angle1 >= 180 || angle2 >= 180 || angle3 >= 180 ) {
+            throw std::invalid_argument("Некорректные параметры для создания прямоугольника.\n");
+        }
+    }
     bool checkValidity() override {
         return (a + b > c && a + c > b && b + c > a && A + B + C == 180 && getSideCount() == 3);
     }
@@ -56,7 +59,11 @@ public:
 class righttriangle : public triangle {
 public:
     righttriangle(int side1, int side2, int angle1, int angle2)
-        : triangle(side1, side2, 0, angle1, angle2, 90) {}
+        : triangle(side1, side2, 0, angle1, angle2, 90) {
+        if (side1 <= 0 || side2 <= 0 || angle1 >=180 || angle2 >= 180) {
+            throw std::invalid_argument("Некорректные параметры для создания прямоугольника.\n");
+        }
+    }
 
     bool checkValidity() override {
         return (A == 90 && B == 90 && C == 90);
@@ -73,7 +80,11 @@ public:
 class equilateraltriangle : public triangle {
 public:
     equilateraltriangle(int side)
-        : triangle(side, side, side, 60, 60, 60) {}
+        : triangle(side, side, side, 60, 60, 60) {
+        if (side <= 0) {
+            throw std::invalid_argument("Некорректные параметры для создания прямоугольника.\n");
+        }
+    }
 
     bool checkValidity() override {
         return (a == b && b == c);
@@ -90,7 +101,11 @@ public:
 class ravnobedtriangle : public triangle {
 public:
     ravnobedtriangle(int side1, int side2, int side3, int angle1, int angle2, int angle3)
-        : triangle(side1, side2, side3, angle1, angle2, angle3) {}
+        : triangle(side1, side2, side3, angle1, angle2, angle3) {
+        if (side1 <= 0 || side2 <= 0 || side3 <= 0 || angle1 >= 180 || angle2 >= 180 || angle3 >= 180) {
+            throw std::invalid_argument("Некорректные параметры для создания прямоугольника.\n");
+        }
+    }
 
     bool checkValidity() override {
         return (a == c && A == C && getSideCount() == 3);
@@ -106,8 +121,11 @@ public:
 };
 class rectangle : public figure {
 public:
-    rectangle(int side1, int side2) : figure(side1, side2, side1, side2, 90, 90, 90, 90) {}
-
+    rectangle(int side1, int side2) : figure(side1, side2, side1, side2, 90, 90, 90, 90) {
+        if (side1 <= 0 || side2 <= 0) {
+            throw std::invalid_argument("Некорректные параметры для создания прямоугольника.\n");
+        }
+    }
     bool checkValidity() override {
         return (a == c && b == d) && (A == B && B == C && C == D && A == 90);
     }
@@ -122,7 +140,11 @@ public:
 };
 class square : public rectangle {
 public:
-    square(int side) : rectangle(side, side) {}
+    square(int side) : rectangle(side, side) {
+        if (side <= 0) {
+            throw std::invalid_argument("Некорректные параметры для создания прямоугольника.\n");
+        }
+    }
     bool checkValidity() override {
         return (a == b && b == c && c == d && A == B && B == C && C == D && A == 90);
     }
@@ -138,7 +160,11 @@ public:
 class parallerogram : public figure {
 public:
     parallerogram(int side1, int side2, int angle)
-        : figure(side1, side2, side1, side2, angle, 180 - angle, angle, 180 - angle) {}
+        : figure(side1, side2, side1, side2, angle, 180 - angle, angle, 180 - angle) {
+        if (side1 <= 0 || side2 <= 0|| angle >=180) {
+            throw std::invalid_argument("Некорректные параметры для создания прямоугольника.\n");
+        }
+    }
     bool checkValidity() override {
         return(a == c && b == d) && (A == B && B == C && C == D);
     }
@@ -153,7 +179,11 @@ public:
 };
 class rombus : public square {
 public:
-    rombus(int side) : square(side) {}
+    rombus(int side) : square(side) {
+        if (side <= 0) {
+            throw std::invalid_argument("Некорректные параметры для создания прямоугольника.\n");
+        }
+    }
     bool checkValidity() override {
         return(a == b && b == c && c == d) && (A == C && B == D && A == 60);
     }
